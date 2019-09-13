@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+
+<h1>My Movies</h1>
+
+<%= link_to 'New Movie', new_movie_path %>
+
+<div id="movies_list_wrapper">
+  <%= render partial: "list", locals: {movies: @movies, rendered_for: "my_movies"}%>
+</div>
+
+

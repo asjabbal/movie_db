@@ -1,0 +1,65 @@
+<h1>Movies</h1>
+
+<div>
+	<h3>Filters</h3>
+
+	<% if @category_facet.size > 0 %>
+		<span>Categories:-</span>
+
+		<ul class="facet">
+			<% @category_facet.each{|category, count| %>
+				<li data-filter-type="categories" data-filter-value="<%= Movie::CATEGORIES.index(category)%>"><%= "#{category} (#{count})"%></li>
+			<%}%>
+		</ul>
+	<% end %>
+
+	<% if @rating_facet.size > 0 %>
+		<span>Ratings:-</span>
+
+		<ul class="facet">
+			<% @rating_facet.each{|rating, count| %>
+				<li data-filter-type="ratings" data-filter-value="<%= rating%>"><%= "#{rating} #{rating==1 ? 'Star' : 'Stars'} (#{count})"%></li>
+			<%}%>
+		</ul>
+	<% end %>
+</div>
+
+<div id="movies_list_wrapper">
+	<%= render partial: "movies/list", locals: {movies: @movies}%>
+</div>
+
+<script type="text/javascript">
+	
+	let filterParams = {
+		categories: [],
+		ratings: []
+	};
+
+
+	$(document).ready(function(){
+
+		$("ul.facet > li").click(function(e){
+			let type = $(this).data("filter-type"), value = $(this).data("filter-value");
+
+			if(filterParams[type].indexOf(value) == -1) {
+				filterParams[type].push(value);
+			} else {
+				filterParams[type].splice(filterParams[type].indexOf(value), 1);
+			}
+
+			console.log(filterParams);
+			searchMovies(filterParams);
+		});
+
+	});
+
+
+	function searchMovies(params){
+		$.ajax({
+			url: "/movies/search",
+			data: {categories: params.categories.join(","), ratings: params.ratings.join(",")},
+			method: "GET"
+		});
+	}
+
+</script>

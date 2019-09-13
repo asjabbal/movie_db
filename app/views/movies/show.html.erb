@@ -1,0 +1,52 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <%= image_tag @movie.image.url, size: "100x100" %>
+</p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @movie.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @movie.description %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @movie.category %>
+</p>
+
+<p>
+  <strong>Avg. Rating:</strong>
+  <%= @movie.avg_rating %>
+</p>
+
+<p>
+  <strong>Rate movie:</strong>
+  <span id="rate_movie" data-mid="<%= @movie.id%>" data-rateyo-rating="<%= @movie.rating_by_user(current_user)%>"></span>
+</p>
+
+<%if user_signed_in? && current_user.is_publisher_of_movie?(@movie)%>
+<%= link_to 'Edit', edit_movie_path(@movie) %>
+<%end%>
+
+
+<script type="text/javascript">
+  
+  $("#rate_movie").rateYo({
+    fullStar: true,
+    onSet: function (rating, rateYoInstance) {
+      let movieId = $(rateYoInstance.node).data("mid");
+
+      $.ajax({
+        url: "/movies/" + movieId + "/rate",
+        data: {rating: rating},
+        method: "POST"
+      });
+    }
+  });
+
+</script>

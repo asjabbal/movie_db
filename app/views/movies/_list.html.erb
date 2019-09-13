@@ -1,0 +1,59 @@
+<table>
+  <thead>
+    <tr>
+      <th>Image</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Category</th>
+      <th>Added by</th>
+      <th>Avg. Rating</th>
+      <% if user_signed_in? %>
+        <th>Rate!</th>
+      <% end %>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% movies.each do |movie| %>
+      <tr>
+        <td><%= image_tag movie.image.url, size: "50x50" %></td>
+        <td><%= movie.title %></td>
+        <td><%= movie.description.truncate(100) %></td>
+        <td><%= movie.category %></td>
+        <td><%= movie.user.name %></td>
+        <td><%= movie.avg_rating.present? ? movie.avg_rating : "N/A" %></td>
+        <% if user_signed_in? %>
+          <td>
+            <span class="rate_movie" data-mid="<%= movie.id%>" data-rateyo-rating="<%= movie.rating_by_user(current_user)%>"></span>
+          </td>
+        <% end %>
+        <td><%= link_to 'View', movie %></td>
+
+        <%if user_signed_in? && current_user.is_publisher_of_movie?(movie)%>
+	      	<td><%= link_to 'Edit', edit_movie_path(movie) %></td>
+	      	<td><%= link_to 'Delete', movie, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <%end%>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate movies, remote: true, params: { controller: 'movies', action: 'search', rendered_for: defined?(rendered_for) ? rendered_for : "" } %>
+
+<script type="text/javascript">
+  
+  $("span.rate_movie").rateYo({
+    fullStar: true,
+    onSet: function (rating, rateYoInstance) {
+      let movieId = $(rateYoInstance.node).data("mid");
+
+      $.ajax({
+        url: "/movies/" + movieId + "/rate",
+        data: {rating: rating},
+        method: "POST"
+      });
+    }
+  });
+
+</script>
