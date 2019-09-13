@@ -16,7 +16,7 @@ for i in 1..100 do
 	user.password_confirmation = "12345678"
 	user.save
 
-	for j in 1..10 do
+	for j in 1..15 do
 		movie = user.movies.new
 		movie.title = "Movie#{j}_#{i}"
 		movie.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut luctus, augue at vulputate condimentum, sem lacus suscipit dolor, eu ultricies tortor mauris eget mi. Vestibulum suscipit nunc ut porta volutpat. Vestibulum at tincidunt nibh, et rutrum dui. Duis viverra enim dapibus, interdum lorem dapibus, mollis leo. Nullam at placerat sapien."

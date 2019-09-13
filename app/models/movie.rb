@@ -2,7 +2,7 @@ class Movie < ApplicationRecord
 	CATEGORIES = ["Action", "Drama", "Suspense", "Sci-Fi", "Thriller", "Romance", "Animation"]
 	MIN_STARS = 1
 	MAX_STARS = 5
-	PER_PAGE = 3
+	PER_PAGE = 10
 
 	enum category: CATEGORIES 
   belongs_to :user
